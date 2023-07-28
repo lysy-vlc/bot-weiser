@@ -11,7 +11,7 @@ const client = useSupabaseClient()
 const user = useSupabaseUser()
 const uiStore = useUIStore()
 
-const question = ref<string>('Co potrzebuje do zrobienia cesji u klienta ?')
+const question = ref<string>('')
 const response = ref<string>('')
 const loading = ref<boolean>(false)
 
