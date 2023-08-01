@@ -8,8 +8,6 @@
 
       <v-toolbar-title>BotWiser {{ route.meta.title }}</v-toolbar-title>
 
-
-
       <client-only>
         <v-btn
           v-if="user"

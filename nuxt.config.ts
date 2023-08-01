@@ -20,6 +20,22 @@ export default defineNuxtConfig({
   },
 
   // @ts-ignore
+  app: {
+    head: {
+      script: [
+        {
+          src:
+            process.env.NODE_ENV === 'development'
+              ? 'knibble.js'
+              : 'https://s3.amazonaws.com/knibble.ai.assets/package.js',
+          body: true,
+          type: 'module',
+        },
+      ],
+    },
+  },
+
+  // @ts-ignore
   pinia: {
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
   },
