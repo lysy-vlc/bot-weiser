@@ -35,6 +35,12 @@ export default defineNuxtConfig({
     },
   },
 
+  runtimeConfig: {
+    public: {
+      STACK_AI_TOKEN: process.env.STACK_AI_TOKEN, // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+    },
+  },
+
   // @ts-ignore
   pinia: {
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],

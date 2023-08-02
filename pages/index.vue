@@ -10,6 +10,7 @@ definePageMeta({
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 const uiStore = useUIStore()
+const config = useRuntimeConfig()
 
 const question = ref<string>('')
 const response = ref<string>('')
@@ -33,17 +34,30 @@ const getResponse = async () => {
   }
 
   try {
-    response.value = await $fetch('/api/ask-ai', {
-      method: 'POST',
-      body: { question: question.value }
-    })
+    const apiResponse = await $fetch<{ 'out-0': string }>(
+      'https://www.stack-inference.com/run_deployed_flow?flow_id=64b6732ee6e6573c75ca8ea2&org=69dcea64-60e9-43ef-b092-fd783ab1d925',
+      {
+        headers: {
+          Authorization: config.public.STACK_AI_TOKEN as string,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          'in-0': question.value,
+        }),
+      }
+    )
+
+    if (apiResponse?.['out-0'].length) response.value = apiResponse['out-0']
   } catch (e) {
     uiStore.showSnackbar('Wystąpił problem z serwisem AI. Sprawdź konsolę, aby zobaczyć więcej szczegółów')
   } finally {
     loading.value = false
   }
 
-  const { error } = await createQuestion(question.value, response.value, user.value?.id, client)
+  if (response.value.length) {
+    await createQuestion(question.value, response.value, user.value?.id, client)
+  }
 }
 </script>
 
@@ -63,7 +77,7 @@ const getResponse = async () => {
             <v-btn
               @click="getResponse"
               color="primary"
-              :disabled="loading"
+              :disabled="loading || question.length < 5"
               :loading="loading"
               block
             >uzyskaj odpowiedź</v-btn>

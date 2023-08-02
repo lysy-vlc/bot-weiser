@@ -55,6 +55,8 @@ const login = async () => {
     })
 
     if (data.user) {
+      await useSupabaseUser()
+
       email.value = ''
       password.value = ''
 
